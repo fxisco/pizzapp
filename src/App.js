@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import './App.css';
 import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
+import { ROUTES } from './conf/routes';
 
 class App extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class App extends Component {
         <header>
           <nav className="navbar navbar-dark bg-dark">
             <div className="container">
-              <Link className="navbar-brand" to="/">Pizzería</Link>
+              <Link className="navbar-brand" to={ROUTES.HOME}>Pizzería</Link>
             </div>
           </nav>
         </header>

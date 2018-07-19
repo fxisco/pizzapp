@@ -2,17 +2,29 @@ import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
 import { getOrderName } from '../helpers/order';
 import AddressForm  from './AddressForm';
+import { HOME_TYPES } from '../conf/order';
 
 class Cart extends  Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      step: 0
+      step: 0,
+      typeOfHome: HOME_TYPES.HOUSE,
+      street: '',
+      number: '',
+      instructions: ''
     };
 
     this.goNextStep = this.goNextStep.bind(this);
     this.goPreviousStep = this.goPreviousStep.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  handleInputChange (event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
   goPreviousStep() {
@@ -35,7 +47,7 @@ class Cart extends  Component {
   }
 
   render () {
-    const { step } = this.state;
+    const { instructions, number, step, typeOfHome, street } = this.state;
     const backButtonText = step === 0 ? 'Volver a empezar' : 'Regresar';
 
     return (
@@ -48,7 +60,12 @@ class Cart extends  Component {
             <div className="row">
               <div className="col-12">
                 {step === 0 &&
-                  <AddressForm />
+                  <AddressForm
+                    number={number}
+                    typeOfHome={typeOfHome}
+                    street={street}
+                    handleInputChange={this.handleInputChange}
+                  />
                 }
                 {step === 1 &&
                   <h2>Number of pizzas</h2>
