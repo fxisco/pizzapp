@@ -1,10 +1,22 @@
 import React from 'react';
 import { HOME_TYPES } from '../conf/constants';
 
-const AddressForm = ({ instructions, number, handleInputChange, street, typeOfHome }) => {
+const AddressForm = ({ name, telephone, instructions, number, handleInputChange, street, typeOfHome }) => {
   return (
     <div className="container">
       <div className="row">
+        <div className="col-sm-12 col-md-6">
+          <div className="form-group">
+            <label htmlFor="street">Nombre</label>
+            <input type="email" className="form-control" name="name" id="name" value={name} onChange={handleInputChange} />
+          </div>
+        </div>
+        <div className="col-sm-12 col-md-6">
+          <div className="form-group">
+            <label htmlFor="street">Télefono contacto</label>
+            <input type="email" className="form-control" name="contact" id="contact" value={telephone} onChange={handleInputChange} />
+          </div>
+        </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
             <label htmlFor="place">Domicilio</label>

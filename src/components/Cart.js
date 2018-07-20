@@ -18,15 +18,14 @@ class Cart extends  Component {
     super(props);
 
     this.state = {
-      step: 2,
-      // step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PICK_NUMBER_OF_PIZZAS,
-      typeOfHome: HOME_TYPES.HOUSE,
+      step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PICK_NUMBER_OF_PIZZAS,
+      name: '',
       street: '',
       number: '',
       instructions: '',
-      pizzas: [
-        {ingredients:{"VEGETABLES":true,"HAM":true}, ingredientsProportions:{VEGETABLES:"WHOLE","HAM":"RIGHT", PEPERRONI: "WHOLE"}, price: 100},{ingredients:{"PEPERRONI":true},ingredientsProportions:{PEPERRONI:"WHOLE"}, price: 100}
-      ]
+      typeOfHome: HOME_TYPES.HOUSE,
+      telephone: '',
+      pizzas: [],
     };
 
     this.goNextStep = this.goNextStep.bind(this);
@@ -147,7 +146,17 @@ class Cart extends  Component {
   }
 
   render () {
-    const { number, pizzas, step, typeOfHome, street } = this.state;
+    const {
+      instructions,
+      name,
+      number,
+      pizzas,
+      step,
+      street,
+      telephone,
+      typeOfHome,
+    } = this.state;
+
     const backButtonText = step === 0 ? 'Volver a empezar' : 'Regresar';
 
     return (
@@ -161,9 +170,12 @@ class Cart extends  Component {
               <div className="col-12">
                 {step === ADDRESS_FORM &&
                   <AddressForm
+                    name={name}
+                    telephone={telephone}
                     number={number}
                     typeOfHome={typeOfHome}
                     street={street}
+                    instructions={instructions}
                     handleInputChange={this.handleInputChange}
                   />
                 }
@@ -177,7 +189,16 @@ class Cart extends  Component {
                   />
                 }
                 {step === CONFIRMATION &&
-                  <Confirmation pizzas={pizzas}/>
+                  <Confirmation
+                    address={{
+                      name,
+                      telephone,
+                      instructions,
+                      number,
+                      typeOfHome,
+                      street}}
+                    pizzas={pizzas}
+                  />
                 }
               </div>
               <div className="col-12 px-4 pt-5 pb-3">

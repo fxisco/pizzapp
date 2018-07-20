@@ -3,11 +3,11 @@ import { formatPizzaIngredientsByProportions } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/constants';
 const price = 100;
 
-const Confirmation = ({ pizzas }) => {
+const Confirmation = ({ address, pizzas }) => {
   return (
     <div>
       <div className="row">
-        <div className="col">
+        <div className="col-sm-12">
           <table className="table">
             <thead className="thead-dark">
                 <tr>
@@ -42,6 +42,43 @@ const Confirmation = ({ pizzas }) => {
             </tr>
             </tbody>
           </table>
+        </div>
+        <div className="col-sm-12 col-md-6">
+          <table className="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" colspan="2">Datos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Nombre</b></td>
+                <td>{address.name}</td>
+              </tr>
+              <tr>
+                <td><b>Teléfono</b></td>
+                <td>{address.telephone}</td>
+              </tr>
+              <tr>
+                <td><b>Número</b></td>
+                <td>{address.number}</td>
+              </tr>
+              <tr>
+                <td><b>Calle</b></td>
+                <td>{address.street}</td>
+              </tr>
+              <tr>
+                <td><b>Instrucciones</b></td>
+                <td>{address.instructions}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
+          <button type="button" className="btn btn-success btn-lg">
+            Colocar orden
+            <i className="fa fa-shopping-cart px-1"></i>
+          </button>
         </div>
       </div>
     </div>
