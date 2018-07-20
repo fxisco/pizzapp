@@ -23,6 +23,15 @@
   font-size: large;
 }
 
+.number-of-pizzas-button,
+.number-of-pizzas {
+  margin: 0 10px;
+}
+
+.number-of-pizzas {
+  font-size: 2em;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

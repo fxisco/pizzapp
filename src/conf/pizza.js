@@ -1,0 +1,6 @@
+export const INGREDIENTS = {
+  PEPERRONI: 'PEPERRONI',
+  HAM: 'HAM',
+  VEGETABLES: 'VEGETABLES',
+  CORN: 'CORN'
+};

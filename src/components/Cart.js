@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
-import { getOrderName } from '../helpers/order';
 import AddressForm  from './AddressForm';
-import { HOME_TYPES } from '../conf/order';
+import PizzaMaker  from './PizzaMaker';
+import { ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
+
+const { ADDRESS_FORM, PICK_NUMBER_OF_PIZZAS } = STEPS;
 
 class Cart extends  Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      step: 0,
+      step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PICK_NUMBER_OF_PIZZAS,
       typeOfHome: HOME_TYPES.HOUSE,
       street: '',
       number: '',
@@ -54,12 +56,12 @@ class Cart extends  Component {
       <div className="container">
         <div className="card shadow-lg">
           <div className="card-header">
-            <h2>{getOrderName(this.props.type)}</h2>
+            <h2>Orden</h2>
           </div>
           <div className="card-body">
             <div className="row">
               <div className="col-12">
-                {step === 0 &&
+                {step === ADDRESS_FORM &&
                   <AddressForm
                     number={number}
                     typeOfHome={typeOfHome}
@@ -67,8 +69,8 @@ class Cart extends  Component {
                     handleInputChange={this.handleInputChange}
                   />
                 }
-                {step === 1 &&
-                  <h2>Number of pizzas</h2>
+                {step === PICK_NUMBER_OF_PIZZAS &&
+                  <PizzaMaker />
                 }
               </div>
               <div className="col-12 px-4 pt-5 pb-3">
