@@ -49,7 +49,7 @@ class Cart extends  Component {
   }
 
   render () {
-    const { instructions, number, step, typeOfHome, street } = this.state;
+    const { number, step, typeOfHome, street } = this.state;
     const backButtonText = step === 0 ? 'Volver a empezar' : 'Regresar';
 
     return (

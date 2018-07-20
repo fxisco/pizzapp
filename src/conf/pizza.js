@@ -4,3 +4,9 @@ export const INGREDIENTS = {
   VEGETABLES: 'VEGETABLES',
   CORN: 'CORN'
 };
+
+export const INGREDIENTS_PROPORTIONS = {
+  LEFT: 'LEFT',
+  WHOLE: 'WHOLE',
+  RIGHT: 'RIGHT'
+};
