@@ -35,6 +35,7 @@ class Cart extends  Component {
     this.removePizza = this.removePizza.bind(this);
     this.addIngredient = this.addIngredient.bind(this);
     this.setIngredientProportion = this.setIngredientProportion.bind(this);
+    this.shouldShowButton = this.shouldShowButton.bind(this);
   }
 
   addPizza() {
@@ -139,10 +140,21 @@ class Cart extends  Component {
   }
 
   goNextStep() {
-    console.log(JSON.stringify(this.state.pizzas));
     this.setState({
       step: this.state.step + 1
     })
+  }
+
+  shouldShowButton() {
+    const { name, number, street, telephone, step } = this.state;
+
+    switch (step) {
+      case ADDRESS_FORM: {
+        return name && number && street && telephone;
+      }
+      default:
+        return true;
+    }
   }
 
   render () {
@@ -201,7 +213,10 @@ class Cart extends  Component {
               </div>
               <div className="col-12 px-4 pt-5 pb-3">
                 <button className="btn btn-danger float-left" onClick={this.goPreviousStep}>Regresar</button>
-                <button className="btn btn-success float-right" onClick={this.goNextStep}>Siguiente</button>
+                {
+                  this.shouldShowButton() &&
+                  <button className="btn btn-success float-right" onClick={this.goNextStep}>Siguiente</button>
+                }
               </div>
             </div>
           </div>

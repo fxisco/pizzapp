@@ -1,20 +1,25 @@
 import React from 'react';
 import { HOME_TYPES } from '../conf/constants';
+import { handleOnlyNumbersValidation } from '../helpers/validation';
+
 
 const AddressForm = ({ name, telephone, instructions, number, handleInputChange, street, typeOfHome }) => {
   return (
     <div className="container">
       <div className="row">
+        <div className="col-sm-12 text-left">
+          <p className="font-weight-bold"><span className="text-danger">*</span> Campos requeridos</p>
+        </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
-            <label htmlFor="street">Nombre</label>
-            <input type="email" className="form-control" name="name" id="name" value={name} onChange={handleInputChange} />
+            <label htmlFor="street">Nombre<span className="text-danger">*</span></label>
+            <input type="text" className="form-control" name="name" id="name" value={name} onChange={handleInputChange} />
           </div>
         </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
-            <label htmlFor="street">Télefono contacto</label>
-            <input type="email" className="form-control" name="contact" id="contact" value={telephone} onChange={handleInputChange} />
+            <label htmlFor="street">Télefono contacto<span className="text-danger">*</span></label>
+            <input type="text" className="form-control" name="telephone" id="telephone" value={telephone} onChange={handleInputChange} onKeyPress={handleOnlyNumbersValidation} />
           </div>
         </div>
         <div className="col-sm-12 col-md-6">
@@ -31,15 +36,15 @@ const AddressForm = ({ name, telephone, instructions, number, handleInputChange,
         </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
-            <label htmlFor="street">Calle</label>
-            <input type="email" className="form-control" name="street" id="street" value={street} onChange={handleInputChange} />
+            <label htmlFor="street">Calle<span className="text-danger">*</span></label>
+            <input type="text" className="form-control" name="street" id="street" value={street} onChange={handleInputChange} />
           </div>
         </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
             <div className="form-group">
-              <label htmlFor="number"># Casa o Apartamento</label>
-              <input type="email" className="form-control" id="number" name="number" value={number} onChange={handleInputChange} />
+              <label htmlFor="number"># Casa o Apartamento<span className="text-danger">*</span></label>
+              <input type="text" className="form-control" id="number" name="number" value={number} onChange={handleInputChange} />
             </div>
           </div>
         </div>
@@ -47,7 +52,7 @@ const AddressForm = ({ name, telephone, instructions, number, handleInputChange,
           <div className="form-group">
             <div className="form-group">
               <label htmlFor="instructions">Instrucciones de entrega</label>
-              <input type="email" className="form-control" id="instructions" name="instructions" value={instructions} onChange={handleInputChange} />
+              <input type="text" className="form-control" id="instructions" name="instructions" value={instructions} onChange={handleInputChange} />
             </div>
           </div>
         </div>
