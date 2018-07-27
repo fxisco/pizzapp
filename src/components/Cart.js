@@ -10,7 +10,7 @@ import { INGREDIENTS_PROPORTIONS } from '../conf/pizza';
 const {
   ADDRESS_FORM,
   CONFIRMATION,
-  PICK_NUMBER_OF_PIZZAS
+  PIZZA_BUILDER
 } = STEPS;
 
 class Cart extends  Component {
@@ -18,7 +18,7 @@ class Cart extends  Component {
     super(props);
 
     this.state = {
-      step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PICK_NUMBER_OF_PIZZAS,
+      step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PIZZA_BUILDER,
       name: '',
       street: '',
       number: '',
@@ -146,14 +146,21 @@ class Cart extends  Component {
   }
 
   shouldShowButton() {
-    const { name, number, street, telephone, step } = this.state;
+    const { name, number, street, telephone, step, pizzas } = this.state;
 
     switch (step) {
       case ADDRESS_FORM: {
         return name && number && street && telephone;
       }
+
+      case PIZZA_BUILDER: {
+        const pizzasWithIngredients = pizzas.filter((pizza) => Object.keys(pizza.ingredients).length > 0).length;
+
+        return pizzas.length > 0 &&
+          pizzasWithIngredients >= pizzas.length;
+      }
       default:
-        return true;
+        return false;
     }
   }
 
@@ -189,7 +196,7 @@ class Cart extends  Component {
                     handleInputChange={this.handleInputChange}
                   />
                 }
-                {step === PICK_NUMBER_OF_PIZZAS &&
+                {step === PIZZA_BUILDER &&
                   <PizzaMaker
                     pizzas={pizzas}
                     addIngredient={this.addIngredient}
