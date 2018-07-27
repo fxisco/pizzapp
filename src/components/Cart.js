@@ -129,7 +129,7 @@ class Cart extends  Component {
     const { step } = this.state;
     const previousStep = step - 1;
 
-    if (previousStep < 0) {
+    if (previousStep < 1) {
       this.props.history.push('/');
     } else {
       this.setState({
@@ -156,8 +156,6 @@ class Cart extends  Component {
       telephone,
       typeOfHome,
     } = this.state;
-
-    const backButtonText = step === 0 ? 'Volver a empezar' : 'Regresar';
 
     return (
       <div className="container">
@@ -202,7 +200,7 @@ class Cart extends  Component {
                 }
               </div>
               <div className="col-12 px-4 pt-5 pb-3">
-                <button className="btn btn-danger float-left" onClick={this.goPreviousStep}>{backButtonText}</button>
+                <button className="btn btn-danger float-left" onClick={this.goPreviousStep}>Regresar</button>
                 <button className="btn btn-success float-right" onClick={this.goNextStep}>Siguiente</button>
               </div>
             </div>
