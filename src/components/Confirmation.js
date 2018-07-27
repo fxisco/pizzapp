@@ -1,9 +1,8 @@
 import React from 'react';
 import { formatPizzaIngredientsByProportions } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/constants';
-const price = 100;
 
-const Confirmation = ({ address, pizzas }) => {
+const Confirmation = ({ address, pizzas, pizzaPrice = 0 }) => {
   return (
     <div>
       <div className="row">
@@ -31,23 +30,22 @@ const Confirmation = ({ address, pizzas }) => {
                       ) : null;
                     })}
                   </td>
-                  <td>{pizza.price}</td>
+                  <td>{pizzaPrice}</td>
                 </tr>
               );
             })}
             <tr>
-              <td></td>
-              <td className="text-right"><b>Total($):</b></td>
-              <td><h3>{price * pizzas.length}</h3></td>
+              <td colSpan="2" className="text-right"><b>Total($):</b></td>
+              <td><h3>{pizzaPrice * pizzas.length}</h3></td>
             </tr>
             </tbody>
           </table>
         </div>
         <div className="col-sm-12 col-md-6">
           <table className="table">
-            <thead class="thead-dark">
+            <thead className="thead-dark">
               <tr>
-                <th scope="col" colspan="2">Datos</th>
+                <th scope="col" colSpan="2">Datos</th>
               </tr>
             </thead>
             <tbody>
