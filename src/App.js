@@ -9,16 +9,29 @@ import './App.css';
 import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
 import { ROUTES } from './conf/routes';
+import { database } from './conf/firebase';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
+    this.confRef = database.collection('app').doc('conf');
     this.state = {
       orderType: '',
+      pizzaPrize: 0
     };
 
     this.handleOrderTypeSelect = this.handleOrderTypeSelect.bind(this);
+  }
+
+  componentDidMount() {
+    this.confRef.get().then((doc) => {
+      const { price = 0 } = doc.data();
+
+      this.setState({
+        pizzaPrize: price
+      });
+    });
   }
 
   handleOrderTypeSelect(type) {
