@@ -9,7 +9,7 @@ import './App.css';
 import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
 import { ROUTES } from './conf/routes';
-import { database } from './conf/firebase';
+import { database } from './firebase';
 
 class App extends Component {
   constructor(props) {
