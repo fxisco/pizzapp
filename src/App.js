@@ -10,6 +10,7 @@ import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
 import { ROUTES } from './conf/routes';
 import { database } from './firebase';
+import { NAME } from './conf/constants';
 
 class App extends Component {
   constructor(props) {
@@ -17,8 +18,9 @@ class App extends Component {
 
     this.confRef = database.collection('app').doc('conf');
     this.state = {
-      orderType: '',
-      pizzaPrize: 0
+      orderTyp: '',
+      pizzaPrize: 0,
+      name: ''
     };
 
     this.handleOrderTypeSelect = this.handleOrderTypeSelect.bind(this);
@@ -26,10 +28,11 @@ class App extends Component {
 
   componentDidMount() {
     this.confRef.get().then((doc) => {
-      const { price = 0 } = doc.data();
+      const { price = 0, name = NAME } = doc.data();
 
       this.setState({
-        pizzaPrize: price
+        pizzaPrize: price,
+        name
       });
     });
   }
@@ -43,14 +46,14 @@ class App extends Component {
   }
 
   render() {
-    const { orderType } = this.state;
+    const { name, orderType } = this.state;
 
     return (
       <div className="App">
         <header>
           <nav className="navbar navbar-dark bg-dark">
             <div className="container">
-              <Link className="navbar-brand" to={ROUTES.HOME}>Pizzería</Link>
+              <Link className="navbar-brand" to={ROUTES.HOME}>{name}</Link>
             </div>
           </nav>
         </header>

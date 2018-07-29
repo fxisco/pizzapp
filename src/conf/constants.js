@@ -31,3 +31,4 @@ export const INGREDIENTS_PROPORTIONS = {
   [PROPORTIONS.WHOLE]: 'Completa'
 };
 
+export const NAME = 'Pizzería';
