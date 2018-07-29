@@ -18,7 +18,7 @@ class App extends Component {
 
     this.confRef = database.collection('app').doc('conf');
     this.state = {
-      orderTyp: '',
+      orderType: '',
       pizzaPrize: 0,
       name: ''
     };
@@ -65,7 +65,7 @@ class App extends Component {
                />
             )}/>
             <Route exact path="/order" component={() => (
-              <Cart type={orderType} />
+              <Cart orderType={orderType} />
             )}/>
           </Switch>
         </main>

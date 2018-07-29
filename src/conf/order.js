@@ -9,7 +9,7 @@ export const HOME_TYPES = {
 };
 
 export const STEPS = {
-  ADDRESS_FORM: 0,
+  CONTACT_FORM: 0,
   PIZZA_BUILDER: 1,
   CONFIRMATION: 2
 };

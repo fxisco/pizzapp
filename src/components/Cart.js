@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from "react-router-dom";
-import AddressForm  from './AddressForm';
+import ContactForm  from './ContactForm';
 import PizzaMaker  from './PizzaMaker';
 import Confirmation  from './Confirmation';
 import { ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
@@ -8,7 +8,7 @@ import { createPizza } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/pizza';
 
 const {
-  ADDRESS_FORM,
+  CONTACT_FORM,
   CONFIRMATION,
   PIZZA_BUILDER
 } = STEPS;
@@ -18,7 +18,7 @@ class Cart extends  Component {
     super(props);
 
     this.state = {
-      step: props.type === ORDER_TYPES.DELIVERY ? ADDRESS_FORM : PIZZA_BUILDER,
+      step: CONTACT_FORM,
       name: '',
       street: '',
       number: '',
@@ -149,10 +149,13 @@ class Cart extends  Component {
     const { name, number, street, telephone, step, pizzas } = this.state;
 
     switch (step) {
-      case ADDRESS_FORM: {
-        return name && number && street && telephone;
-      }
+      case CONTACT_FORM: {
+        if (this.props.orderType === ORDER_TYPES.DELIVERY) {
+          return name && number && street && telephone;
+        }
 
+        return name && telephone;
+      }
       case PIZZA_BUILDER: {
         const pizzasWithIngredients = pizzas.filter((pizza) => Object.keys(pizza.ingredients).length > 0).length;
 
@@ -185,14 +188,15 @@ class Cart extends  Component {
           <div className="card-body">
             <div className="row">
               <div className="col-12">
-                {step === ADDRESS_FORM &&
-                  <AddressForm
+                {step === CONTACT_FORM &&
+                  <ContactForm
                     name={name}
                     telephone={telephone}
                     number={number}
                     typeOfHome={typeOfHome}
                     street={street}
                     instructions={instructions}
+                    orderType={this.props.orderType}
                     handleInputChange={this.handleInputChange}
                   />
                 }
