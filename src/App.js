@@ -53,7 +53,7 @@ class App extends Component {
         <header>
           <nav className="navbar navbar-dark bg-dark">
             <div className="container">
-              <Link className="navbar-brand" to={ROUTES.HOME}>{name}</Link>
+              <Link className="navbar-brand" to={ROUTES.HOME} dangerouslySetInnerHTML={{__html: name || '&nbsp' }} />
             </div>
           </nav>
         </header>

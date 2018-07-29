@@ -1,6 +1,7 @@
 import {
   ORDER_TYPES as ORDER,
   HOME_TYPES as HOME,
+  ORDER_STATUS as STATUS,
 } from './order';
 
 import {
@@ -29,6 +30,15 @@ export const INGREDIENTS_PROPORTIONS = {
   [PROPORTIONS.LEFT]: 'Izquierda',
   [PROPORTIONS.RIGHT]: 'Derecha',
   [PROPORTIONS.WHOLE]: 'Completa'
+};
+
+export const ORDER_STATUS = {
+  [STATUS.EMITTED]: 'Orden Emitida',
+  [STATUS.COOKING]: 'Cocinando',
+  [STATUS.IN_PREPARATION]: 'En preparación',
+  [STATUS.COOKING]: 'En el horno',
+  [STATUS.READY]: 'Orden lista',
+  [STATUS.ON_DELIVERY]: 'En delivery',
 };
 
 export const NAME = 'Pizzería';

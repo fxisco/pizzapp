@@ -3,9 +3,10 @@ import { withRouter } from "react-router-dom";
 import ContactForm  from './ContactForm';
 import PizzaMaker  from './PizzaMaker';
 import Confirmation  from './Confirmation';
-import { ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
+import { ORDER_STATUS, ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
 import { createPizza } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/pizza';
+import { database } from '../firebase';
 
 const {
   CONTACT_FORM,
@@ -16,6 +17,8 @@ const {
 class Cart extends  Component {
   constructor(props) {
     super(props);
+
+    this.orderRef = database.collection('orders');
 
     this.state = {
       step: CONTACT_FORM,
@@ -36,6 +39,7 @@ class Cart extends  Component {
     this.addIngredient = this.addIngredient.bind(this);
     this.setIngredientProportion = this.setIngredientProportion.bind(this);
     this.shouldShowButton = this.shouldShowButton.bind(this);
+    this.handleEmitOrder = this.handleEmitOrder.bind(this);
   }
 
   addPizza() {
@@ -74,7 +78,7 @@ class Cart extends  Component {
             },
             ingredientsProportions: {
               ...pizza.ingredientsProportions,
-              [ingredientId]: INGREDIENTS_PROPORTIONS.LEFT
+              [ingredientId]: INGREDIENTS_PROPORTIONS.WHOLE
             },
           },
           ...pizzas.slice(pizzaId + 1),
@@ -167,6 +171,25 @@ class Cart extends  Component {
     }
   }
 
+  handleEmitOrder() {
+    const newRegistry = this.orderRef.doc();
+    const { orderType } = this.props;
+    const { name, number, street, telephone, step, pizzas } = this.state;
+
+    this.orderRef.doc(newRegistry.id).set({
+      id: newRegistry.id,
+      orderType,
+      name,
+      number,
+      street,
+      telephone,
+      pizzas,
+      status: ORDER_STATUS.EMITTED
+    }).then(() => {
+      console.log('::orden colocada');
+    });
+  }
+
   render () {
     const {
       instructions,
@@ -178,6 +201,8 @@ class Cart extends  Component {
       telephone,
       typeOfHome,
     } = this.state;
+
+    const { orderType } = this.props;
 
     return (
       <div className="container">
@@ -196,7 +221,7 @@ class Cart extends  Component {
                     typeOfHome={typeOfHome}
                     street={street}
                     instructions={instructions}
-                    orderType={this.props.orderType}
+                    orderType={orderType}
                     handleInputChange={this.handleInputChange}
                   />
                 }
@@ -218,7 +243,9 @@ class Cart extends  Component {
                       number,
                       typeOfHome,
                       street}}
+                    orderType={orderType}
                     pizzas={pizzas}
+                    handleEmitOrder={this.handleEmitOrder}
                   />
                 }
               </div>

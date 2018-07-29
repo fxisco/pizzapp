@@ -1,8 +1,9 @@
 import React from 'react';
 import { formatPizzaIngredientsByProportions } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/constants';
+import { ORDER_TYPES } from '../conf/order';
 
-const Confirmation = ({ address, pizzas, pizzaPrice = 0 }) => {
+const Confirmation = ({ address, pizzas, pizzaPrice = 0, orderType, handleEmitOrder }) => {
   return (
     <div>
       <div className="row">
@@ -57,23 +58,25 @@ const Confirmation = ({ address, pizzas, pizzaPrice = 0 }) => {
                 <td><b>Teléfono</b></td>
                 <td>{address.telephone}</td>
               </tr>
-              <tr>
-                <td><b>Número</b></td>
-                <td>{address.number}</td>
-              </tr>
-              <tr>
-                <td><b>Calle</b></td>
-                <td>{address.street}</td>
-              </tr>
-              <tr>
-                <td><b>Instrucciones</b></td>
-                <td>{address.instructions}</td>
-              </tr>
+              {orderType === ORDER_TYPES.DELIVERY && [
+                <tr key="confirmation-number">
+                  <td><b>Número</b></td>
+                  <td>{address.number}</td>
+                </tr>,
+                <tr key="confirmation-street">
+                  <td><b>Calle</b></td>
+                  <td>{address.street}</td>
+                </tr>,
+                <tr key="confirmation-instruction">
+                  <td><b>Instrucciones</b></td>
+                  <td>{address.instructions}</td>
+                </tr>
+              ]}
             </tbody>
           </table>
         </div>
         <div className="col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
-          <button type="button" className="btn btn-success btn-lg">
+          <button type="button" className="btn btn-success btn-lg" onClick={handleEmitOrder}>
             Colocar orden
             <i className="fa fa-shopping-cart px-1"></i>
           </button>

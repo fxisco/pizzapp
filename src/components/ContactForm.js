@@ -44,7 +44,7 @@ const ContactForm = ({ name, telephone, instructions, orderType, number, handleI
           <div key="number" className="col-sm-12 col-md-6">
             <div className="form-group">
               <div className="form-group">
-                <label htmlFor="number"># Casa o Apartamento<span className="text-danger">*</span></label>
+                <label htmlFor="number"># {HOME_TYPES[typeOfHome]}<span className="text-danger">*</span></label>
                 <input type="text" className="form-control" id="number" name="number" value={number} onChange={handleInputChange} />
               </div>
             </div>
