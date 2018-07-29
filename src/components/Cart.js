@@ -14,22 +14,24 @@ const {
   PIZZA_BUILDER
 } = STEPS;
 
+const initialState = {
+  step: CONTACT_FORM,
+  name: '',
+  street: '',
+  number: '',
+  instructions: '',
+  typeOfHome: HOME_TYPES.HOUSE,
+  telephone: '',
+  pizzas: [],
+};
+
 class Cart extends  Component {
   constructor(props) {
     super(props);
 
     this.orderRef = database.collection('orders');
 
-    this.state = {
-      step: CONTACT_FORM,
-      name: '',
-      street: '',
-      number: '',
-      instructions: '',
-      typeOfHome: HOME_TYPES.HOUSE,
-      telephone: '',
-      pizzas: [],
-    };
+    this.state = initialState;
 
     this.goNextStep = this.goNextStep.bind(this);
     this.goPreviousStep = this.goPreviousStep.bind(this);
@@ -138,7 +140,7 @@ class Cart extends  Component {
       this.props.history.push('/');
     } else {
       this.setState({
-        step: step - 1
+        step: previousStep
       });
     }
   }
@@ -174,7 +176,7 @@ class Cart extends  Component {
   handleEmitOrder() {
     const newRegistry = this.orderRef.doc();
     const { orderType } = this.props;
-    const { name, number, street, telephone, step, pizzas } = this.state;
+    const { name, number, street, telephone, pizzas } = this.state;
 
     this.orderRef.doc(newRegistry.id).set({
       id: newRegistry.id,
@@ -186,7 +188,7 @@ class Cart extends  Component {
       pizzas,
       status: ORDER_STATUS.EMITTED
     }).then(() => {
-      console.log('::orden colocada');
+      this.props.history.push(`order/${newRegistry.id}`);
     });
   }
 

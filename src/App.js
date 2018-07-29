@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import './App.css';
 import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
+import OrderDetails from './components/OrderDetails';
 import { ROUTES } from './conf/routes';
 import { database } from './firebase';
 import { NAME } from './conf/constants';
@@ -67,6 +68,8 @@ class App extends Component {
             <Route exact path="/order" component={() => (
               <Cart orderType={orderType} price={pizzaPrize} />
             )}/>
+
+            <Route exact path="/order/:id" component={OrderDetails} />
           </Switch>
         </main>
       </div>
