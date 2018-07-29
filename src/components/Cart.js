@@ -202,7 +202,7 @@ class Cart extends  Component {
       typeOfHome,
     } = this.state;
 
-    const { orderType } = this.props;
+    const { orderType, price } = this.props;
 
     return (
       <div className="container">
@@ -246,6 +246,7 @@ class Cart extends  Component {
                     orderType={orderType}
                     pizzas={pizzas}
                     handleEmitOrder={this.handleEmitOrder}
+                    pizzaPrice={price}
                   />
                 }
               </div>

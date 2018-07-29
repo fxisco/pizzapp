@@ -46,7 +46,7 @@ class App extends Component {
   }
 
   render() {
-    const { name, orderType } = this.state;
+    const { name, orderType, pizzaPrize } = this.state;
 
     return (
       <div className="App">
@@ -65,7 +65,7 @@ class App extends Component {
                />
             )}/>
             <Route exact path="/order" component={() => (
-              <Cart orderType={orderType} />
+              <Cart orderType={orderType} price={pizzaPrize} />
             )}/>
           </Switch>
         </main>
