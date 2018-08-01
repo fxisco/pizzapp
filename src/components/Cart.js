@@ -5,6 +5,7 @@ import PizzaMaker  from './PizzaMaker';
 import Confirmation  from './Confirmation';
 import ThankNote  from './ThankNote';
 import { ORDER_STATUS, ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
+import { STEP_TITLE } from '../conf/constants';
 import { createPizza } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/pizza';
 import { database } from '../firebase';
@@ -215,7 +216,7 @@ class Cart extends  Component {
       <div className="container">
         <div className="card shadow-lg">
           <div className="card-header">
-            <h2>Orden</h2>
+            <h2>{STEP_TITLE[step]}</h2>
           </div>
           <div className="card-body">
             <div className="row">

@@ -2,6 +2,7 @@ import {
   ORDER_TYPES as ORDER,
   HOME_TYPES as HOME,
   ORDER_STATUS as STATUS,
+  STEPS
 } from './order';
 
 import {
@@ -40,5 +41,13 @@ export const ORDER_STATUS = {
   [STATUS.READY]: 'Orden lista',
   [STATUS.ON_DELIVERY]: 'En delivery',
 };
+
+export const STEP_TITLE = {
+  [STEPS.CONTACT_FORM]: 'Formulario de contacto',
+  [STEPS.PIZZA_BUILDER]: 'Construye tu pizza',
+  [STEPS.CONFIRMATION]: 'Confirmación de orden',
+  [STEPS.THANK]: 'Gracias por su orden',
+};
+
 
 export const NAME = 'Pizzería';
