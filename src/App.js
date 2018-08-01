@@ -69,7 +69,7 @@ class App extends Component {
               <Cart orderType={orderType} price={pizzaPrize} />
             )}/>
 
-            <Route exact path="/order/:id" component={OrderDetails} />
+            <Route exact path="/order/:id" component={(props) => <OrderDetails {...props} price={pizzaPrize} />} />
           </Switch>
         </main>
       </div>

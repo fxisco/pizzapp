@@ -47,3 +47,20 @@
 .half-left {
   transform: rotate(180deg);
 }
+
+.status--emitted {
+  width: 10%;
+}
+
+.status--in-preparation {
+  width: 25%;
+}
+
+.status--cooking {
+  width: 75%;
+}
+
+.status--on-delivery,
+.status--ready {
+  width: 100%;
+}
