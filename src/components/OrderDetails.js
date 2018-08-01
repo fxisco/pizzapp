@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { database } from '../firebase';
 import ProductsSummary from './ProductsSummary';
 import ClientSummary from './ClientSummary';
-import { ORDER_TYPES } from '../conf/constants';
+import { ORDER_TYPES, ORDER_STATUS_MESSAGE } from '../conf/constants';
 import { ORDER_STATUS } from '../conf/order';
 
 const STATUS_CLASS = {
@@ -23,10 +23,10 @@ const STATUS_VALUE = {
 
 const STATUS_COLOR = {
   [ORDER_STATUS.EMITTED]: '',
-  [ORDER_STATUS.IN_PREPARATION]: 'bg-warning',
-  [ORDER_STATUS.COOKING]: 'bg-danger',
-  [ORDER_STATUS.READY]: 'bg-success',
-  [ORDER_STATUS.ON_DELIVERY]: 'bg-info',
+  [ORDER_STATUS.IN_PREPARATION]: 'warning',
+  [ORDER_STATUS.COOKING]: 'danger',
+  [ORDER_STATUS.READY]: 'success',
+  [ORDER_STATUS.ON_DELIVERY]: 'info',
 };
 
 class OrderDetails extends Component {
@@ -74,8 +74,9 @@ class OrderDetails extends Component {
         <h1>Order: {ORDER_TYPES[order.orderType]}</h1>
         <div className="row my-4">
           <div className="col-sm-12">
+            <h2>Estado: <b className={`text-${STATUS_COLOR[status]}`}>{ORDER_STATUS_MESSAGE[status]}</b></h2>
             <div className="progress">
-              <div className={`progress-bar progress-bar-striped progress-bar-animated ${STATUS_CLASS[status]} ${STATUS_COLOR[status]}`} role="progressbar" aria-valuenow={STATUS_VALUE[status]} aria-valuemin="0" aria-valuemax="100" />
+              <div className={`progress-bar progress-bar-striped progress-bar-animated ${STATUS_CLASS[status]} bg-${STATUS_COLOR[status]}`} role="progressbar" aria-valuenow={STATUS_VALUE[status]} aria-valuemin="0" aria-valuemax="100" />
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ export const INGREDIENTS_PROPORTIONS = {
   [PROPORTIONS.WHOLE]: 'Completa'
 };
 
-export const ORDER_STATUS = {
+export const ORDER_STATUS_MESSAGE = {
   [STATUS.EMITTED]: 'Orden Emitida',
   [STATUS.COOKING]: 'Cocinando',
   [STATUS.IN_PREPARATION]: 'En preparación',
