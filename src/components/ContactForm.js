@@ -12,7 +12,7 @@ const ContactForm = ({ name, telephone, instructions, orderType, number, handleI
         </div>
         <div className="col-sm-12 col-md-6">
           <div className="form-group">
-            <label htmlFor="street">Nombre<span className="text-danger">*</span></label>
+            <label htmlFor="street">Al nombre de: <span className="text-danger">*</span></label>
             <input type="text" className="form-control" name="name" id="name" value={name} onChange={handleInputChange} />
           </div>
         </div>

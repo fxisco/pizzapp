@@ -11,7 +11,8 @@ export const HOME_TYPES = {
 export const STEPS = {
   CONTACT_FORM: 0,
   PIZZA_BUILDER: 1,
-  CONFIRMATION: 2
+  CONFIRMATION: 2,
+  THANK: 3
 };
 
 export const ORDER_STATUS = {

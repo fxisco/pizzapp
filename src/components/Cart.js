@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import ContactForm  from './ContactForm';
 import PizzaMaker  from './PizzaMaker';
 import Confirmation  from './Confirmation';
+import ThankNote  from './ThankNote';
 import { ORDER_STATUS, ORDER_TYPES, HOME_TYPES, STEPS } from '../conf/order';
 import { createPizza } from '../helpers/pizza';
 import { INGREDIENTS_PROPORTIONS } from '../conf/pizza';
@@ -11,19 +12,9 @@ import { database } from '../firebase';
 const {
   CONTACT_FORM,
   CONFIRMATION,
-  PIZZA_BUILDER
+  PIZZA_BUILDER,
+  THANK
 } = STEPS;
-
-const initialState = {
-  step: CONTACT_FORM,
-  name: '',
-  street: '',
-  number: '',
-  instructions: '',
-  typeOfHome: HOME_TYPES.HOUSE,
-  telephone: '',
-  pizzas: [],
-};
 
 class Cart extends  Component {
   constructor(props) {
@@ -31,7 +22,17 @@ class Cart extends  Component {
 
     this.orderRef = database.collection('orders');
 
-    this.state = initialState;
+    this.state = {
+      step: CONTACT_FORM,
+      name: '',
+      street: '',
+      number: '',
+      instructions: '',
+      typeOfHome: HOME_TYPES.HOUSE,
+      telephone: '',
+      pizzas: [],
+      orderId: ''
+    };
 
     this.goNextStep = this.goNextStep.bind(this);
     this.goPreviousStep = this.goPreviousStep.bind(this);
@@ -188,7 +189,10 @@ class Cart extends  Component {
       pizzas,
       status: ORDER_STATUS.EMITTED
     }).then(() => {
-      this.props.history.push(`order/${newRegistry.id}`);
+      this.setState({
+        orderId: newRegistry.id,
+        step: this.state.step + 1,
+      });
     });
   }
 
@@ -197,6 +201,7 @@ class Cart extends  Component {
       instructions,
       name,
       number,
+      orderId,
       pizzas,
       step,
       street,
@@ -251,9 +256,14 @@ class Cart extends  Component {
                     pizzaPrice={price}
                   />
                 }
+                {step === THANK &&
+                  <ThankNote orderId={orderId} />
+                }
               </div>
               <div className="col-12 px-4 pt-5 pb-3">
-                <button className="btn btn-danger float-left" onClick={this.goPreviousStep}>Regresar</button>
+                {step !== THANK &&
+                  <button className="btn btn-danger float-left" onClick={this.goPreviousStep}>Regresar</button>
+                }
                 {
                   this.shouldShowButton() &&
                   <button className="btn btn-success float-right" onClick={this.goNextStep}>Siguiente</button>

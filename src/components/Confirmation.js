@@ -1,5 +1,4 @@
 import React from 'react';
-import { ORDER_TYPES } from '../conf/order';
 import ProductsSummary from './ProductsSummary';
 import ClientSummary from './ClientSummary';
 
