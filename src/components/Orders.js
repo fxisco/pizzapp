@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { database } from '../firebase';
 import { getEndOfDay, getStartOfDay } from '../helpers/date';
-import { ORDER_TYPES } from '../conf/constants';
-import { ORDER_STATUS } from '../conf/order';
+import { ORDER_TYPES as TYPES } from '../conf/constants';
+import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
 import { filterOrdersByStatus, showIngredientsByProportion } from '../helpers/order';
 
 const Order = ({ orderType, pizzas }) => {
@@ -20,7 +20,7 @@ const Order = ({ orderType, pizzas }) => {
   return (
     <div className="card mb-3 shadow">
       <div className={`card-header ${orderType === ORDER_TYPES.DELIVERY ? "bg-primary" : "bg-info"}`}>
-        <b className="text-white">{ORDER_TYPES[orderType]}</b>
+        <b className="text-white">{TYPES[orderType]}</b>
       </div>
       <ul className="list-group">
         {pizzasFormatted}
