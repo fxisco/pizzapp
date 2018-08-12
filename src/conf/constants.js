@@ -35,7 +35,6 @@ export const INGREDIENTS_PROPORTIONS = {
 
 export const ORDER_STATUS_MESSAGE = {
   [STATUS.EMITTED]: 'Orden Emitida',
-  [STATUS.COOKING]: 'Cocinando',
   [STATUS.IN_PREPARATION]: 'En preparación',
   [STATUS.COOKING]: 'En el horno',
   [STATUS.READY]: 'Orden lista',
