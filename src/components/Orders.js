@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { database } from '../firebase';
 import { getEndOfDay, getStartOfDay } from '../helpers/date';
-import { ORDER_TYPES as TYPES } from '../conf/constants';
+import { ORDER_TYPES as TYPES, MAX_CLICKS_TO_CANCEL } from '../conf/constants';
+import { CONTEXT_MENU } from '../helpers/constants';
 import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
 import {
-  getOrderNextStep,
+  getOrderNextStatus,
+  getOrderPreviousStatus,
   filterOrdersByStatus,
   showIngredientsByProportion
 } from '../helpers/order';
 
-const Order = ({ id, orderType, pizzas, onDoubleClick = () => {} }) => {
+const DOUBLE_CLICK_MAX_TIME = 1000;
+
+const Order = ({ id, orderType, pizzas, onDoubleClick = () => {}, onContextMenu = () => {} }) => {
   const pizzasFormatted = pizzas.map((pizza, index) => {
 
     const ingredientsByProportion = showIngredientsByProportion(pizza);
@@ -22,7 +26,7 @@ const Order = ({ id, orderType, pizzas, onDoubleClick = () => {} }) => {
   });
 
   return (
-    <div className="card mb-3 shadow" onDoubleClick={onDoubleClick.bind(null, id)}>
+    <div className="card mb-3 shadow" onDoubleClick={onDoubleClick.bind(null, id)} onContextMenu={(event) => onContextMenu(event, id)}>
       <div className={`card-header ${orderType === ORDER_TYPES.DELIVERY ? "bg-info" : "bg-primary"}`}>
         <b className="text-white">{TYPES[orderType]}</b>
       </div>
@@ -37,22 +41,59 @@ class Orders extends Component {
   constructor(props) {
     super(props);
 
+    this.timeOut = null;
+
     this.state = {
-      orders: {}
+      orders: {},
+      contextMenuClick: 0
     };
 
     this.ordersRef = database.collection('orders');
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
   }
 
   handleDoubleClick(id) {
     const order = this.state.orders[id];
+    const nextStatus = getOrderNextStatus(order);
 
-    if (order.status === ORDER_STATUS.READY || order.status === ORDER_STATUS.ON_DELIVERY)
+    if (order.status !== nextStatus) {
+      this.ordersRef
+        .doc(id)
+        .set({ status: nextStatus }, { merge: true })
+    }
+  }
 
-    this.ordersRef
-      .doc(id)
-      .set({ status: getOrderNextStep(order) }, { merge: true })
+  handleContextMenu(event, id) {
+    event.preventDefault();
+
+    if (event.type === CONTEXT_MENU) {
+      clearTimeout(this.timeOut);
+      let clicks = this.state.contextMenuClick + 1;
+
+      if (clicks === MAX_CLICKS_TO_CANCEL) {
+        const order = this.state.orders[id];
+        const previousStatus = getOrderPreviousStatus(order);
+
+        clicks = 0;
+
+        if (previousStatus !== order.status) {
+          this.ordersRef
+            .doc(id)
+            .set({ status: previousStatus }, { merge: true })
+        }
+      }
+
+      this.setState({
+        contextMenuClick: clicks
+      }, () => {
+        this.timeOut = setTimeout(() => {
+          this.setState({
+            contextMenuClick: 0
+          })
+        }, DOUBLE_CLICK_MAX_TIME);
+      })
+    }
   }
 
   componentDidMount () {
@@ -113,6 +154,7 @@ class Orders extends Component {
                       key={orderId}
                       {...order}
                       onDoubleClick={this.handleDoubleClick}
+                      onContextMenu={this.handleContextMenu}
                     />
                   );
                 })}
@@ -134,6 +176,7 @@ class Orders extends Component {
                         key={orderId}
                         {...order}
                         onDoubleClick={this.handleDoubleClick}
+                        onContextMenu={this.handleContextMenu}
                       />
                     );
                   })}
@@ -155,6 +198,7 @@ class Orders extends Component {
                         key={orderId}
                         {...order}
                         onDoubleClick={this.handleDoubleClick}
+                        onContextMenu={this.handleContextMenu}
                       />
                     );
                   })}
@@ -176,6 +220,7 @@ class Orders extends Component {
                         key={orderId}
                         {...order}
                         onDoubleClick={this.handleDoubleClick}
+                        onContextMenu={this.handleContextMenu}
                       />
                     );
                   })}
@@ -197,6 +242,7 @@ class Orders extends Component {
                         key={orderId}
                         {...order}
                         onDoubleClick={this.handleDoubleClick}
+                        onContextMenu={this.handleContextMenu}
                       />
                     );
                   })}

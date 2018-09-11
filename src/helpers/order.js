@@ -23,7 +23,7 @@ export const showIngredientsByProportion = (pizza) => {
   });
 };
 
-export const getOrderNextStep = ({ orderType, status = '' }) => {
+export const getOrderNextStatus = ({ orderType, status = '' }) => {
   if (status === ORDER_STATUS.EMITTED) {
     return ORDER_STATUS.IN_PREPARATION;
   } else if (status === ORDER_STATUS.IN_PREPARATION) {
@@ -32,6 +32,20 @@ export const getOrderNextStep = ({ orderType, status = '' }) => {
     return ORDER_STATUS.ON_DELIVERY;
   } else if (status === ORDER_STATUS.COOKING && orderType === ORDER_TYPES.PICKUP) {
     return ORDER_STATUS.READY;
+  }
+
+  return status;
+};
+
+export const getOrderPreviousStatus = ({ status = '' }) => {
+  if (status === ORDER_STATUS.IN_PREPARATION) {
+    return ORDER_STATUS.EMITTED;
+  } else if (status === ORDER_STATUS.COOKING) {
+    status =  ORDER_STATUS.IN_PREPARATION;
+  } else if (status === ORDER_STATUS.ON_DELIVERY) {
+    status =  ORDER_STATUS.COOKING;
+  } else if (status === ORDER_STATUS.READY) {
+    status =  ORDER_STATUS.COOKING;
   }
 
   return status;

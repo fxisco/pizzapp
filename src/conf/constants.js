@@ -48,5 +48,6 @@ export const STEP_TITLE = {
   [STEPS.THANK]: 'Gracias por su orden',
 };
 
+export const MAX_CLICKS_TO_CANCEL = 2;
 
 export const NAME = 'Pizzería';
