@@ -1,11 +1,7 @@
 import React from 'react';
-import { ORDER_TYPES } from '../conf/constants';
+import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
 import { INGREDIENTS_PROPORTIONS } from '../conf/constants';
 import { formatPizzaIngredientsByProportions } from './pizza';
-
-export const getOrderName = (type) => {
-  return ORDER_TYPES[type];
-};
 
 export const filterOrdersByStatus = (orders, status) => {
   return Object.keys(orders).filter((id) => {
@@ -25,4 +21,18 @@ export const showIngredientsByProportion = (pizza) => {
       </div>
     ) : null;
   });
+};
+
+export const getOrderNextStep = ({ orderType, status = '' }) => {
+  if (status === ORDER_STATUS.EMITTED) {
+    return ORDER_STATUS.IN_PREPARATION;
+  } else if (status === ORDER_STATUS.IN_PREPARATION) {
+    return ORDER_STATUS.COOKING;
+  } else if (status === ORDER_STATUS.COOKING && orderType === ORDER_TYPES.DELIVERY) {
+    return ORDER_STATUS.ON_DELIVERY;
+  } else if (status === ORDER_STATUS.COOKING && orderType === ORDER_TYPES.PICKUP) {
+    return ORDER_STATUS.READY;
+  }
+
+  return status;
 };

@@ -22,4 +22,3 @@ export const ORDER_STATUS = {
   ON_DELIVERY: 'ON_DELIVERY',
   READY: 'READY',
 };
-
