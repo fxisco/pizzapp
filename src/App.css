@@ -40,7 +40,7 @@
   display: none;
 }
 
-.proportion:checked+label {
+.proportion:checked + label {
   color: #FF0000;
 }
 
@@ -63,4 +63,9 @@
 .status--on-delivery,
 .status--ready {
   width: 100%;
+}
+
+.react-datepicker__input-container input {
+  text-align: center;
+  font-size: 2em;
 }

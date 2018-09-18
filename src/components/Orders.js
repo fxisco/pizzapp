@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
 import { database } from '../firebase';
-import { getEndOfDay, getStartOfDay } from '../helpers/date';
+import { getEndOfDay, getStartOfDay, getDate } from '../helpers/date';
 import { ORDER_TYPES as TYPES, MAX_CLICKS_TO_CANCEL } from '../conf/constants';
 import { CONTEXT_MENU } from '../helpers/constants';
 import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
@@ -10,6 +11,8 @@ import {
   filterOrdersByStatus,
   showIngredientsByProportion
 } from '../helpers/order';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const DOUBLE_CLICK_MAX_TIME = 1000;
 
@@ -42,15 +45,61 @@ class Orders extends Component {
     super(props);
 
     this.timeOut = null;
+    this.unsubscribe = null;
 
     this.state = {
+      date: getDate(),
       orders: {},
       contextMenuClick: 0
     };
 
     this.ordersRef = database.collection('orders');
+
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.subscribeListener = this.subscribeListener.bind(this);
+  }
+
+  componentDidMount () {
+    this.subscribeListener();
+  }
+
+  subscribeListener () {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    this.unsubscribe = this.ordersRef
+      .where("date", ">=", getStartOfDay(this.state.date))
+      .where("date", "<", getEndOfDay(this.state.date))
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            console.log('::added');
+            this.setState({ orders: {
+              ...this.state.orders,
+              [change.doc.id]: change.doc.data()
+            }});
+          }
+          if (change.type === "modified") {
+            const order = change.doc.data();
+
+            this.setState({
+              orders: {
+                ...this.state.orders,
+                [order.id]: {
+                  ...order
+                }
+              }
+            });
+          }
+
+          if (change.type === "removed") {
+            console.log("Removed: ", change.doc.data());
+          }
+        });
+      });
   }
 
   handleDoubleClick(id) {
@@ -96,39 +145,17 @@ class Orders extends Component {
     }
   }
 
-  componentDidMount () {
-    this.ordersRef
-      .where("date", ">=", getStartOfDay())
-      .where("date", "<", getEndOfDay())
-      .onSnapshot((querySnapshot) => {
-        querySnapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            this.setState({ orders: {
-              ...this.state.orders,
-              [change.doc.id]: change.doc.data()
-            }});
-          }
-          if (change.type === "modified") {
-            const order = change.doc.data();
-
-            this.setState({
-              orders: {
-                ...this.state.orders,
-                [order.id]: {
-                  ...order
-                }
-              }
-            });
-          }
-
-          if (change.type === "removed") {
-            console.log("Removed: ", change.doc.data());
-          }
-        });
-      });
+  handleDateChange (date) {
+    this.setState({
+      date,
+      orders: {},
+    }, () => {
+      this.subscribeListener();
+    });
   }
+
   render() {
-    const { orders } = this.state;
+    const { date, orders } = this.state;
     const ordersEmmited = filterOrdersByStatus(orders, ORDER_STATUS.EMITTED);
     const ordersInPreparation = filterOrdersByStatus(orders, ORDER_STATUS.IN_PREPARATION);
     const ordersCooking = filterOrdersByStatus(orders, ORDER_STATUS.COOKING);
@@ -138,6 +165,14 @@ class Orders extends Component {
     return (
       <div className="container-fluid">
         <h1>Vista de ordenes</h1>
+        <div className="row">
+          <div className="col-12 py-5">
+            <DatePicker
+              selected={date}
+              onChange={this.handleDateChange}
+            />
+          </div>
+        </div>
         <div className="row justify-content-center py-2">
           <div className="col col-md-2">
             <div className="card shadow-lg">
