@@ -48,7 +48,7 @@
   transform: rotate(180deg);
 }
 
-.status--emitted {
+.status--issued {
   width: 10%;
 }
 
@@ -68,4 +68,30 @@
 .react-datepicker__input-container input {
   text-align: center;
   font-size: 2em;
+}
+
+.card-header {
+  position: relative;
+}
+
+.card-header > .action-button {
+  background: transparent;
+  border: 0;
+  padding: 10px;
+  position: absolute;
+  transform: translateY(-50%);
+  top: 50%;
+}
+
+.action-button > .fa-arrow-circle-left,
+.action-button > .fa-arrow-circle-right {
+  color: #FFF;
+}
+
+.card-header > .action-button.left {
+  left: 5%;
+}
+
+.card-header > .action-button.right {
+  right: 5%;
 }

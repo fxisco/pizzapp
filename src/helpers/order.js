@@ -24,7 +24,7 @@ export const showIngredientsByProportion = (pizza) => {
 };
 
 export const getOrderNextStatus = ({ orderType, status = '' }) => {
-  if (status === ORDER_STATUS.EMITTED) {
+  if (status === ORDER_STATUS.ISSUED) {
     return ORDER_STATUS.IN_PREPARATION;
   } else if (status === ORDER_STATUS.IN_PREPARATION) {
     return ORDER_STATUS.COOKING;
@@ -39,7 +39,7 @@ export const getOrderNextStatus = ({ orderType, status = '' }) => {
 
 export const getOrderPreviousStatus = ({ status = '' }) => {
   if (status === ORDER_STATUS.IN_PREPARATION) {
-    return ORDER_STATUS.EMITTED;
+    return ORDER_STATUS.ISSUED;
   } else if (status === ORDER_STATUS.COOKING) {
     status =  ORDER_STATUS.IN_PREPARATION;
   } else if (status === ORDER_STATUS.ON_DELIVERY) {

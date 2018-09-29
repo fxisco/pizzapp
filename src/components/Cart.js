@@ -188,7 +188,7 @@ class Cart extends  Component {
       street,
       telephone,
       pizzas,
-      status: ORDER_STATUS.EMITTED,
+      status: ORDER_STATUS.ISSUED,
       date: new Date()
     }).then(() => {
       this.setState({

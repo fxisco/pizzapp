@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import { database } from '../firebase';
 import { getEndOfDay, getStartOfDay, getDate } from '../helpers/date';
-import { ORDER_TYPES as TYPES, MAX_CLICKS_TO_CANCEL } from '../conf/constants';
-import { CONTEXT_MENU } from '../helpers/constants';
+import { ORDER_TYPES as TYPES } from '../conf/constants';
 import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
 import {
   getOrderNextStatus,
@@ -14,9 +13,7 @@ import {
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-const DOUBLE_CLICK_MAX_TIME = 1000;
-
-const Order = ({ id, orderType, pizzas, onDoubleClick = () => {}, onContextMenu = () => {} }) => {
+const Order = ({ id, orderType, pizzas, status, moveForward = () => {}, moveBackward = () => {} }) => {
   const pizzasFormatted = pizzas.map((pizza, index) => {
 
     const ingredientsByProportion = showIngredientsByProportion(pizza);
@@ -29,9 +26,19 @@ const Order = ({ id, orderType, pizzas, onDoubleClick = () => {}, onContextMenu 
   });
 
   return (
-    <div className="card mb-3 shadow" onDoubleClick={onDoubleClick.bind(null, id)} onContextMenu={(event) => onContextMenu(event, id)}>
+    <div className="card mb-3 shadow">
       <div className={`card-header ${orderType === ORDER_TYPES.DELIVERY ? "bg-info" : "bg-primary"}`}>
+        {!(status === ORDER_STATUS.ISSUED) &&
+          <button className="action-button left" onClick={moveBackward.bind(null, id)}>
+            <i className="fa fa-arrow-circle-left px-1" />
+          </button>
+        }
         <b className="text-white">{TYPES[orderType]}</b>
+        {!(status === ORDER_STATUS.DELIVERY || status === ORDER_STATUS.READY) &&
+          <button className="action-button right" onClick={moveForward.bind(null, id)}>
+            <i className="fa fa-arrow-circle-right px-1"/>
+          </button>
+        }
       </div>
       <ul className="list-group">
         {pizzasFormatted}
@@ -44,19 +51,17 @@ class Orders extends Component {
   constructor(props) {
     super(props);
 
-    this.timeOut = null;
     this.unsubscribe = null;
 
     this.state = {
       date: getDate(),
       orders: {},
-      contextMenuClick: 0
     };
 
     this.ordersRef = database.collection('orders');
 
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleMoveForward = this.handleMoveForward.bind(this);
+    this.handleMoveBackward = this.handleMoveBackward.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.subscribeListener = this.subscribeListener.bind(this);
   }
@@ -102,7 +107,7 @@ class Orders extends Component {
       });
   }
 
-  handleDoubleClick(id) {
+  handleMoveForward(id) {
     const order = this.state.orders[id];
     const nextStatus = getOrderNextStatus(order);
 
@@ -113,35 +118,14 @@ class Orders extends Component {
     }
   }
 
-  handleContextMenu(event, id) {
-    event.preventDefault();
+  handleMoveBackward(id) {
+    const order = this.state.orders[id];
+    const previousStatus = getOrderPreviousStatus(order);
 
-    if (event.type === CONTEXT_MENU) {
-      clearTimeout(this.timeOut);
-      let clicks = this.state.contextMenuClick + 1;
-
-      if (clicks === MAX_CLICKS_TO_CANCEL) {
-        const order = this.state.orders[id];
-        const previousStatus = getOrderPreviousStatus(order);
-
-        clicks = 0;
-
-        if (previousStatus !== order.status) {
-          this.ordersRef
-            .doc(id)
-            .set({ status: previousStatus }, { merge: true })
-        }
-      }
-
-      this.setState({
-        contextMenuClick: clicks
-      }, () => {
-        this.timeOut = setTimeout(() => {
-          this.setState({
-            contextMenuClick: 0
-          })
-        }, DOUBLE_CLICK_MAX_TIME);
-      })
+    if (previousStatus !== order.status) {
+      this.ordersRef
+        .doc(id)
+        .set({ status: previousStatus }, { merge: true });
     }
   }
 
@@ -156,7 +140,7 @@ class Orders extends Component {
 
   render() {
     const { date, orders } = this.state;
-    const ordersEmmited = filterOrdersByStatus(orders, ORDER_STATUS.EMITTED);
+    const issuedOrders = filterOrdersByStatus(orders, ORDER_STATUS.ISSUED);
     const ordersInPreparation = filterOrdersByStatus(orders, ORDER_STATUS.IN_PREPARATION);
     const ordersCooking = filterOrdersByStatus(orders, ORDER_STATUS.COOKING);
     const ordersReady = filterOrdersByStatus(orders, ORDER_STATUS.READY);
@@ -180,7 +164,7 @@ class Orders extends Component {
                 <b>Ordenes entrantes</b>
               </div>
               <div className="card-body bg-light">
-                {ordersEmmited
+                {issuedOrders
                   .map((orderId) => {
                   const order = orders[orderId];
 
@@ -188,8 +172,8 @@ class Orders extends Component {
                     <Order
                       key={orderId}
                       {...order}
-                      onDoubleClick={this.handleDoubleClick}
-                      onContextMenu={this.handleContextMenu}
+                      moveForward={this.handleMoveForward}
+                      moveBackward={this.handleMoveBackward}
                     />
                   );
                 })}
@@ -210,8 +194,8 @@ class Orders extends Component {
                       <Order
                         key={orderId}
                         {...order}
-                        onDoubleClick={this.handleDoubleClick}
-                        onContextMenu={this.handleContextMenu}
+                        moveForward={this.handleMoveForward}
+                        moveBackward={this.handleMoveBackward}
                       />
                     );
                   })}
@@ -232,8 +216,8 @@ class Orders extends Component {
                       <Order
                         key={orderId}
                         {...order}
-                        onDoubleClick={this.handleDoubleClick}
-                        onContextMenu={this.handleContextMenu}
+                        moveForward={this.handleMoveForward}
+                        moveBackward={this.handleMoveBackward}
                       />
                     );
                   })}
@@ -254,8 +238,8 @@ class Orders extends Component {
                       <Order
                         key={orderId}
                         {...order}
-                        onDoubleClick={this.handleDoubleClick}
-                        onContextMenu={this.handleContextMenu}
+                        moveForward={this.handleMoveForward}
+                        moveBackward={this.handleMoveBackward}
                       />
                     );
                   })}
@@ -276,8 +260,8 @@ class Orders extends Component {
                       <Order
                         key={orderId}
                         {...order}
-                        onDoubleClick={this.handleDoubleClick}
-                        onContextMenu={this.handleContextMenu}
+                        moveForward={this.handleMoveForward}
+                        moveBackward={this.handleMoveBackward}
                       />
                     );
                   })}

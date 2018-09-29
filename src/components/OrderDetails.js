@@ -6,7 +6,7 @@ import { ORDER_TYPES, ORDER_STATUS_MESSAGE } from '../conf/constants';
 import { ORDER_STATUS } from '../conf/order';
 
 const STATUS_CLASS = {
-  [ORDER_STATUS.EMITTED]: 'status--emitted',
+  [ORDER_STATUS.ISSUED]: 'status--issued',
   [ORDER_STATUS.IN_PREPARATION]: 'status--in-preparation',
   [ORDER_STATUS.COOKING]: 'status--cooking',
   [ORDER_STATUS.ON_DELIVERY]: 'status--on-delivery',
@@ -14,7 +14,7 @@ const STATUS_CLASS = {
 };
 
 const STATUS_VALUE = {
-  [ORDER_STATUS.EMITTED]: 10,
+  [ORDER_STATUS.ISSUED]: 10,
   [ORDER_STATUS.IN_PREPARATION]: 25,
   [ORDER_STATUS.COOKING]: 75,
   [ORDER_STATUS.READY]: 100,
@@ -22,7 +22,7 @@ const STATUS_VALUE = {
 };
 
 const STATUS_COLOR = {
-  [ORDER_STATUS.EMITTED]: '',
+  [ORDER_STATUS.ISSUED]: '',
   [ORDER_STATUS.IN_PREPARATION]: 'warning',
   [ORDER_STATUS.COOKING]: 'danger',
   [ORDER_STATUS.READY]: 'success',

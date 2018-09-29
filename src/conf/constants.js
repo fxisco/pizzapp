@@ -34,7 +34,7 @@ export const INGREDIENTS_PROPORTIONS = {
 };
 
 export const ORDER_STATUS_MESSAGE = {
-  [STATUS.EMITTED]: 'Orden Emitida',
+  [STATUS.ISSUED]: 'Orden Emitida',
   [STATUS.IN_PREPARATION]: 'En preparación',
   [STATUS.COOKING]: 'En el horno',
   [STATUS.READY]: 'Orden lista',
@@ -47,7 +47,5 @@ export const STEP_TITLE = {
   [STEPS.CONFIRMATION]: 'Confirmación de orden',
   [STEPS.THANK]: 'Gracias por su orden',
 };
-
-export const MAX_CLICKS_TO_CANCEL = 2;
 
 export const NAME = 'Pizzería';
