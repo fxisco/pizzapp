@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import { database } from '../firebase';
 import { getEndOfDay, getStartOfDay, getDate } from '../helpers/date';
-import { ORDER_TYPES as TYPES } from '../conf/constants';
+import { ORDER_TYPES as TYPES, HOME_TYPES } from '../conf/constants';
 import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
 import {
   getOrderNextStatus,
@@ -13,7 +13,19 @@ import {
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-const Order = ({ id, orderType, pizzas, status, moveForward = () => {}, moveBackward = () => {} }) => {
+const Order = ({
+  id,
+  instructions = '',
+  orderType,
+  name = '',
+  number = '',
+  pizzas,
+  typeOfHome,
+  telephone = '',
+  status,
+  street = '',
+  moveForward = () => {},
+  moveBackward = () => {} }) => {
   const pizzasFormatted = pizzas.map((pizza, index) => {
 
     const ingredientsByProportion = showIngredientsByProportion(pizza);
@@ -25,23 +37,58 @@ const Order = ({ id, orderType, pizzas, status, moveForward = () => {}, moveBack
     );
   });
 
+  const isDelivery = orderType === ORDER_TYPES.DELIVERY;
+
   return (
     <div className="card mb-3 shadow">
-      <div className={`card-header ${orderType === ORDER_TYPES.DELIVERY ? "bg-info" : "bg-primary"}`}>
+      <div className={`card-header ${isDelivery ? "bg-info" : "bg-primary"}`}>
         {!(status === ORDER_STATUS.ISSUED) &&
-          <button className="action-button left" onClick={moveBackward.bind(null, id)}>
-            <i className="fa fa-arrow-circle-left px-1" />
-          </button>
+        <button className="action-button left" onClick={moveBackward.bind(null, id)}>
+          <i className="fa fa-arrow-circle-left px-1" />
+        </button>
         }
         <b className="text-white">{TYPES[orderType]}</b>
         {!(status === ORDER_STATUS.DELIVERY || status === ORDER_STATUS.READY) &&
-          <button className="action-button right" onClick={moveForward.bind(null, id)}>
-            <i className="fa fa-arrow-circle-right px-1"/>
-          </button>
+        <button className="action-button right" onClick={moveForward.bind(null, id)}>
+          <i className="fa fa-arrow-circle-right px-1"/>
+        </button>
         }
       </div>
       <ul className="list-group">
         {pizzasFormatted}
+        <li className={`list-group-item bg-light ${isDelivery ? "border-info" : "border-primary"}`}>
+          {orderType === ORDER_TYPES.PICKUP &&
+          <div className="detail text-secondary">
+            <div>
+              {name}
+            </div>
+            <div>
+              {telephone}
+            </div>
+          </div>
+          }
+          {orderType === ORDER_TYPES.DELIVERY &&
+          <div className="detail text-secondary">
+            <div>
+              {name}
+            </div>
+            <div>
+              {telephone}
+            </div>
+            <div>
+              <b>{HOME_TYPES[typeOfHome]} {number}</b>
+            </div>
+            <div>
+              <b>Calle</b>: {street}
+            </div>
+            {instructions &&
+              <div>
+                {instructions}
+              </div>
+            }
+          </div>
+          }
+        </li>
       </ul>
     </div>
   );

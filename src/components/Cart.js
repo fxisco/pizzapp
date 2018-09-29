@@ -178,15 +178,25 @@ class Cart extends  Component {
   handleEmitOrder() {
     const newRegistry = this.orderRef.doc();
     const { orderType } = this.props;
-    const { name, number, street, telephone, pizzas } = this.state;
-
-    this.orderRef.doc(newRegistry.id).set({
-      id: newRegistry.id,
-      orderType,
+    const {
+      instructions,
       name,
       number,
       street,
       telephone,
+      typeOfHome,
+      pizzas,
+    } = this.state;
+
+    this.orderRef.doc(newRegistry.id).set({
+      id: newRegistry.id,
+      orderType,
+      instructions,
+      name,
+      number,
+      street,
+      telephone,
+      typeOfHome,
       pizzas,
       status: ORDER_STATUS.ISSUED,
       date: new Date()
