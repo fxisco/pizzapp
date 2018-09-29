@@ -3,7 +3,12 @@ import DatePicker from 'react-datepicker';
 import { database } from '../firebase';
 import { getEndOfDay, getStartOfDay, getDate } from '../helpers/date';
 import { ORDER_TYPES as TYPES, HOME_TYPES } from '../conf/constants';
-import { ORDER_STATUS, ORDER_TYPES } from '../conf/order';
+import {
+  BOARD,
+  BOARD_TABLES,
+  ORDER_STATUS,
+  ORDER_TYPES
+} from '../conf/order';
 import {
   getOrderNextStatus,
   getOrderPreviousStatus,
@@ -12,6 +17,7 @@ import {
 } from '../helpers/order';
 
 import 'react-datepicker/dist/react-datepicker.css';
+
 
 const Order = ({
   id,
@@ -187,11 +193,6 @@ class Orders extends Component {
 
   render() {
     const { date, orders } = this.state;
-    const issuedOrders = filterOrdersByStatus(orders, ORDER_STATUS.ISSUED);
-    const ordersInPreparation = filterOrdersByStatus(orders, ORDER_STATUS.IN_PREPARATION);
-    const ordersCooking = filterOrdersByStatus(orders, ORDER_STATUS.COOKING);
-    const ordersReady = filterOrdersByStatus(orders, ORDER_STATUS.READY);
-    const ordersOnDelivery = filterOrdersByStatus(orders, ORDER_STATUS.ON_DELIVERY);
 
     return (
       <div className="container-fluid">
@@ -205,116 +206,35 @@ class Orders extends Component {
           </div>
         </div>
         <div className="row justify-content-center py-2">
-          <div className="col col-md-2">
-            <div className="card shadow-lg">
-              <div className="card-header">
-                <b>Ordenes entrantes</b>
-              </div>
-              <div className="card-body bg-light">
-                {issuedOrders
-                  .map((orderId) => {
-                  const order = orders[orderId];
+          {BOARD.map((table) => {
+            const filteredOrders = filterOrdersByStatus(orders, table);
+            const selectedTable = BOARD_TABLES[table];
 
-                  return (
-                    <Order
-                      key={orderId}
-                      {...order}
-                      moveForward={this.handleMoveForward}
-                      moveBackward={this.handleMoveBackward}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-2">
-            <div className="card shadow-lg">
-              <div className="card-header bg-warning text-white">
-                <b>En preparación</b>
-              </div>
-              <div className="card-body bg-light">
-                {ordersInPreparation
-                  .map((orderId) => {
-                    const order = orders[orderId];
+            return (
+              <div className="col col-md-2">
+                <div className="card shadow-lg">
+                  <div className={`card-header ${selectedTable.titleColor}`}>
+                    <b>{selectedTable.title}</b>
+                  </div>
+                  <div className="card-body">
+                    {filteredOrders
+                      .map((orderId) => {
+                        const order = orders[orderId];
 
-                    return (
-                      <Order
-                        key={orderId}
-                        {...order}
-                        moveForward={this.handleMoveForward}
-                        moveBackward={this.handleMoveBackward}
-                      />
-                    );
-                  })}
+                        return (
+                          <Order
+                            key={orderId}
+                            {...order}
+                            moveForward={this.handleMoveForward}
+                            moveBackward={this.handleMoveBackward}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col col-md-2">
-            <div className="card shadow-lg">
-              <div className="card-header bg-danger text-white">
-                <b>En el horno</b>
-              </div>
-              <div className="card-body bg-light">
-                {ordersCooking
-                  .map((orderId) => {
-                    const order = orders[orderId];
-
-                    return (
-                      <Order
-                        key={orderId}
-                        {...order}
-                        moveForward={this.handleMoveForward}
-                        moveBackward={this.handleMoveBackward}
-                      />
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-2">
-            <div className="card shadow-lg">
-              <div className="card-header bg-info text-white">
-                <b>Ordenes en delivery</b>
-              </div>
-              <div className="card-body bg-light">
-                {ordersOnDelivery
-                  .map((orderId) => {
-                    const order = orders[orderId];
-
-                    return (
-                      <Order
-                        key={orderId}
-                        {...order}
-                        moveForward={this.handleMoveForward}
-                        moveBackward={this.handleMoveBackward}
-                      />
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
-          <div className="col col-md-2">
-            <div className="card shadow-lg">
-              <div className="card-header bg-success text-white">
-                <b>Orden Lista</b>
-              </div>
-              <div className="card-body bg-light">
-                {ordersReady
-                  .map((orderId) => {
-                    const order = orders[orderId];
-
-                    return (
-                      <Order
-                        key={orderId}
-                        {...order}
-                        moveForward={this.handleMoveForward}
-                        moveBackward={this.handleMoveBackward}
-                      />
-                    );
-                  })}
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     );
