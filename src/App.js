@@ -9,6 +9,7 @@ import './App.css';
 import OrderTypePicker from './components/OrderTypePicker';
 import Cart from './components/Cart';
 import Orders from './components/Orders';
+import Products from './components/Products';
 import OrderDetails from './components/OrderDetails';
 import { ROUTES } from './conf/routes';
 import { database } from './firebase';
@@ -71,6 +72,7 @@ class App extends Component {
               <Cart orderType={orderType} price={pizzaPrize} />
             )}/>
             <Route exact path="/order/:id" component={(props) => <OrderDetails {...props} price={pizzaPrize} />} />
+            <Route exact path="/products" component={Products}/>
           </Switch>
         </main>
       </div>
