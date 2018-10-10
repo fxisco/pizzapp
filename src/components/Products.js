@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { handleOnlyNumbersValidation } from '../helpers/validation';
+import { database } from '../firebase';
 
 class Products extends Component {
   constructor(props) {
     super(props);
+
+    this.productsRef = database.collection('products');
 
     this.state = {
       name: '',
@@ -23,17 +26,17 @@ class Products extends Component {
   }
 
   addProduct () {
-    this.setState({
-      name: '',
-      price: '',
-      products: [
-        ...this.state.products,
-        {
-          name: this.state.name,
-          price: this.state.price
-        }
-      ]
+    const newRegistry = this.productsRef.doc();
+    const { name, price = 0 } = this.state;
+
+    this.productsRef.doc(newRegistry.id).set({
+      id: newRegistry.id,
+      active: true,
+      name,
+      price: parseInt(price)
     });
+
+    this.resetForm();
   }
 
   resetForm () {
@@ -73,7 +76,7 @@ class Products extends Component {
                   </div>
                   <div className="col-12 text-right">
                     <button className="btn btn-danger mr-2" onClick={this.resetForm}>Cancelar</button>
-                    <button className="btn btn-success" onClick={this.addProduct}>Guardar</button>
+                    {name && price && <button className="btn btn-success" onClick={this.addProduct}>Guardar</button>}
                   </div>
                 </div>
               </div>
@@ -86,7 +89,9 @@ class Products extends Component {
               <div key={`product-${index}`} className="col-sm-12 col-md-6 col-lg-3">
                 <div className="card">
                   <div className="card-body">
+                    <div className="text-right"><button type="button" className={`btn ${item.active ? 'btn-success' : 'btn-danger' }`}>{item.active ? 'Activo': 'Desactivado'}</button></div>
                     <h5 className="card-title text-left">{item.name}</h5>
+                    <div><b>Price</b>: ${item.price}</div>
                   </div>
                 </div>
               </div>
