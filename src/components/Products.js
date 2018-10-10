@@ -7,16 +7,22 @@ class Products extends Component {
     super(props);
 
     this.productsRef = database.collection('products');
+    this.unsubscribe = null;
 
     this.state = {
       name: '',
       price: '',
-      products: []
+      products: {}
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addProduct = this.addProduct.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.subscribeListener = this.subscribeListener.bind(this);
+  }
+
+  componentDidMount () {
+    this.subscribeListener();
   }
 
   handleInputChange (event) {
@@ -45,6 +51,43 @@ class Products extends Component {
       price: ''
     });
   }
+
+  subscribeListener () {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    this.unsubscribe = this.productsRef
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            this.setState({ products: {
+              ...this.state.products,
+              [change.doc.id]: change.doc.data()
+            }});
+          }
+
+          if (change.type === "modified") {
+            const product = change.doc.data();
+
+            this.setState({
+              products: {
+                ...this.state.products,
+                [product.id]: {
+                  ...product
+                }
+              }
+            });
+          }
+
+          if (change.type === "removed") {
+            console.log("Removed: ", change.doc.data());
+          }
+        });
+      });
+  }
+
+
 
   render() {
     const { name, price, products } = this.state;
@@ -84,12 +127,14 @@ class Products extends Component {
           </div>
         </div>
         <div className="row my-5">
-          {products.map((item, index) => {
+          {Object.keys(products).map((key) => {
+            const item = products[key];
+
             return (
-              <div key={`product-${index}`} className="col-sm-12 col-md-6 col-lg-3">
+              <div key={`product-${key}`} className="col-sm-12 col-md-6 col-lg-3">
                 <div className="card">
                   <div className="card-body">
-                    <div className="text-right"><button type="button" className={`btn ${item.active ? 'btn-success' : 'btn-danger' }`}>{item.active ? 'Activo': 'Desactivado'}</button></div>
+                    <div className="text-right"><button type="button" className={`btn btn-sm ${item.active ? 'btn-success' : 'btn-danger' }`}>{item.active ? 'Activo': 'Desactivado'}</button></div>
                     <h5 className="card-title text-left">{item.name}</h5>
                     <div><b>Price</b>: ${item.price}</div>
                   </div>
