@@ -96,3 +96,29 @@
   right: 5%;
 }
 
+.product-card .actions {
+  position: relative;
+  height: 50px;
+}
+
+.product-card .actions > .action-button,
+.product-card .actions > .btn {
+  position: absolute;
+}
+
+.product-card .actions > .btn {
+  left: 0;
+}
+
+.product-card .actions > .action-button {
+  border: none;
+  cursor: pointer;
+  right: 0;
+}
+
+.product-form input {
+  text-align: center;
+}
+
+
+
